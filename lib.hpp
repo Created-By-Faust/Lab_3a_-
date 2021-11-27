@@ -9,43 +9,82 @@
 #define lib_hpp
 #include <iostream>
 #include <stdio.h>
+using namespace std;
 
-namespace LIB{
+template <class T>
+int get_num(T& i) {
+
+    do {
+        std::cin >> i;
+        int peeked = cin.peek();
+
+        if (peeked == 10 && std::cin.good()) {
+            return 0;
+        } else if (std::cin.bad()) {
+            return -1;
+        } else {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid number, enter again!\n";
+        }
+    } while (!cin.eof());
+
+    return 0;
+}
+
+struct uzel{
+    double x;
+    double y;
+};
+
 class Func
 {
 private:
     static const int SZ = 5;
-    double x_coor[SZ];
-    double y_coor[SZ];
+    uzel Arr[SZ];
     int size_coor = 0;
+    bool first_input = true;
 
 public:
-    Func() //пустой конструктор
+    Func() = default;
+    Func(double X_coor, double Y_coor) //конструктор по добавлению одного узла
     {
-        for (size_t i = 0; i < SZ; i++)
-        {
-            x_coor[i] = 0;
-            y_coor[i] = 0;
+        if (size_coor < SZ) {
+            Arr[size_coor].x = X_coor;
+            Arr[size_coor].y = Y_coor;
+            size_coor++;
         }
     }
+    
+    Func(int k, uzel* U) //конструктор с инициализацией количеством узлов и значениями функции в узла
+    {
+        for (size_t i = 0; i < k; i++)
+        {
+            Arr[size_coor].x = U[i].x;
+            Arr[size_coor].y = U[i].y;
+        
+        }
+        size_coor = k;
 
-
+    }
     //Пузырьковая сортировка
     void sortBubl();
 
     //Поиск максимального и минимального элемента
-    void maxMinFunc(Func f);
+    //void maxMinFunc(Func f);
+    
+    double maximum();
+    double minimum();
+    
+    void typeF();
 
-    void typeF(Func f);
+    double calculateF( double xO);
+    
+    ostream & printFunc(std::ostream &buf) const;
 
-    double calculateF(Func f, double xO);
-    void printFunc( Func f);
-
-  
-    int saveUzels(int SZ_uz, Func U);
-    int add_Uzel(Func U);
-
+   
+    int addUzel();
     };
 
-}
+
 #endif /* lib_hpp */
